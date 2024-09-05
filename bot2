@@ -1,0 +1,40 @@
+const bedrock = require('bedrock-protocol');
+const { WebhookClient } = require('discord.js');
+
+const WEBHOOK_URL = 'https://canary.discord.com/api/webhooks/1218211869198913628/Dr14dyPu69CvtqJLD0X6nbi7y2ReK4JZtJtlZJ7TiH3vI-aM173-5vJRNhqSdeq70o06';
+const webhookClient = new WebhookClient({ url: WEBHOOK_URL });
+
+
+function createClient(username) {
+    return bedrock.createClient({
+        host: 'DonutSMP.net',
+        port: 19132,
+        username: username,
+        offline: false
+    });
+}
+
+
+const client1 = createClient('ddd');
+
+function setupClientListeners(client) {
+    client.on('spawn', () => {
+        console.log(`${client.username} joined the server (Bedrock)`);
+        sendDiscordMessage(`${client.username} joined the server (Bedrock)`);
+    });
+}
+
+function sendDiscordMessage(message) {
+    webhookClient.send(message)
+        .then(() => console.log('Discord message sent successfully'))
+        .catch(error => console.error('Error sending Discord message:', error.message));
+}
+
+setupClientListeners(client1);
+
+
+function sendPeriodicMessage() {
+    sendDiscordMessage('I am still here <@732594779832975360>'); 
+}
+
+setInterval(sendPeriodicMessage, 300000);  // every 5 minutes (300,000 milliseconds)
